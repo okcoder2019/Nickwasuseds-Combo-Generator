@@ -9,38 +9,31 @@ namesfile = 'names.json'
 
 combos = []
 
-def clearvars():
-    name = None
-    name_extra = None
-    email_domain = None
-    email = None
-    password = None
 
-def maincombo():
+def subcombo():
+    name = random.choice(names).lower() + random.choice(surnames).lower()
+    name_extra = ''.join(random.choice(string.digits) for _ in range(random.randint(1, 4)))
+    email_domain = random.choice(email_domains) + random.choice(domain_end)
+    email = name + name_extra + '@' + email_domain
+    password = random.choice(passwordlist)
+    combo = ('{0}:{1}'.format(email, password)).encode()
+    combos.append(combo)
+
+
+def submail():
+    name = random.choice(names).lower() + random.choice(surnames).lower()
+    name_extra = ''.join(random.choice(string.digits) for _ in range(random.randint(1, 4)))
+    email_domain = random.choice(email_domains) + random.choice(domain_end)
+    email = name + name_extra + '@' + email_domain
+    combo = ('{0}'.format(email)).encode()
+    combo = combo + '\n'.encode()
+    combos.append(combo)
+
+
+def main():
     from tqdm import tqdm
-    for _ in tqdm(range(1000000), unit='Combos'):
-        name = random.choice(names).lower() + random.choice(surnames).lower()
-        name_extra = ''.join(random.choice(string.digits) for _ in range(random.randint(1, 4)))
-        email_domain = random.choice(email_domains) + random.choice(domain_end)
-        email = name + name_extra + '@' + email_domain
-        password = random.choice(passwordlist)
-        combo = ('{0}:{1}'.format(email, password)).encode()
-        combos.append(combo)
-        clearvars()
-    writefile()
-
-
-def mainmail():
-    from tqdm import tqdm
-    for _ in tqdm(range(1000000), unit='Combos'):
-        name = random.choice(names).lower() + random.choice(surnames).lower()
-        name_extra = ''.join(random.choice(string.digits) for _ in range(random.randint(1, 4)))
-        email_domain = random.choice(email_domains) + random.choice(domain_end)
-        email = name + name_extra + '@' + email_domain
-        combo = ('{0}'.format(email)).encode()
-        combo = combo + '\n'.encode()
-        combos.append(combo)
-        clearvars()
+    for _ in tqdm(range(1000000), unit=' Combos'):
+        generator()
     writefile()
 
 
@@ -93,7 +86,9 @@ if __name__ == "__main__":
 
     if args.type == 'email':
         while 1:
-            mainmail()
+            generator = submail
+            main()
     else:
         while 1:
-            maincombo()
+            generator = subcombo
+            main()
